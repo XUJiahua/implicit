@@ -6,7 +6,7 @@ import pandas as pd
 import scipy
 from sklearn.model_selection import train_test_split
 
-from data import ItemsHelper, RatingsHelper, similar_items
+from helper import ItemsHelper, RatingsHelper, similar_items
 from eval import evaluate
 from model import get_model
 
@@ -24,15 +24,14 @@ def stat(df):
 print(ratings.dtypes)
 stat(ratings)
 
-sparse_ratings_train = ratings_helper.to_sparse_matrix(ratings)
+item_users = ratings_helper.to_sparse_item_users(ratings)
 
 model_name = "als"
-model_name = "cosine"
 log = logging.getLogger("implicit")
 
 model = get_model(model_name)
 start = time.time()
-model.fit(sparse_ratings_train)
+model.fit(item_users)
 log.debug("trained model '%s' in %s", model_name, time.time() - start)
 
 print(similar_items(model, 588, ratings_helper, items_helper))
