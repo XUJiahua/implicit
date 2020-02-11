@@ -2,9 +2,9 @@ import pandas as pd
 import json
 
 
-def evaluate(model, ratings_train, ratings_test, K=10, col_user='uid', col_item='iid'):
+def evaluate(model, ratings_train, ratings_test, K=10, recommend_all=True, col_user='uid', col_item='iid'):
     recommendations = None
-    if hasattr(model, 'recommend_all'):
+    if hasattr(model, 'recommend_all') and recommend_all:
         # recommendations matrix: n_user x K (recommend list length)
         recommendations = model.recommend_all(ratings_train,
                                               N=K,
@@ -47,6 +47,6 @@ def evaluate(model, ratings_train, ratings_test, K=10, col_user='uid', col_item=
     return df
 
 
-def evaluate_avg(model, ratings_train, ratings_test, K=10, col_user='uid', col_item='iid'):
-    df = evaluate(model, ratings_train, ratings_test, K, col_user, col_item)
+def evaluate_avg(model, ratings_train, ratings_test, K=10, recommend_all=True, col_user='uid', col_item='iid'):
+    df = evaluate(model, ratings_train, ratings_test, K, recommend_all, col_user, col_item)
     return json.loads(df.describe().loc["mean", :].to_json())

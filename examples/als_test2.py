@@ -13,29 +13,28 @@ from implicit.approximate_als import (AnnoyAlternatingLeastSquares, FaissAlterna
                                       NMSLibAlternatingLeastSquares)
 
 
-ratings = pd.read_csv("ml-latest-small/ratings.csv", usecols=[0, 1, 2])
-movies = pd.read_csv("ml-latest-small/movies.csv", usecols=[0, 1])
+# movielens_prefix = "ml-latest-small"
+movielens_prefix = "/media/john/data/data/ml-20m"
+
+ratings = pd.read_csv(movielens_prefix + "/ratings.csv", usecols=[0, 1, 2])
+movies = pd.read_csv(movielens_prefix + "/movies.csv", usecols=[0, 1])
 
 items_helper = ItemsHelper(movies)
 ratings_helper = RatingsHelper()
 ratings = ratings_helper.parse_and_transform(ratings)
 
-sparse_ratings = ratings_helper.to_sparse_item_users(ratings)
+item_users = ratings_helper.to_sparse_item_users(ratings)
 
 log = logging.getLogger("implicit")
 
 model = AlternatingLeastSquares()
 
-model.fit(sparse_ratings)
+model.fit(item_users)
 
-# print(similar_items(model, 588, ratings_helper, items_helper))
+user_id = 0
+user_items = item_users.T.tocsr()
+recommendations = model.recommend_all(user_items)
+print(recommendations[user_id,:])
 
-# recommendations = model.recommend_all(sparse_ratings.transpose(), filter_already_liked_items=True)
-recommendations = model.recommend_all(sparse_ratings.transpose(), filter_already_liked_items=False)
-print(recommendations.shape)
-print(recommendations[0,:])
-
-user_item_sparse_ratings = ratings_helper.to_sparse_user_items(ratings)
-# recommendation = model.recommend(0, user_item_sparse_ratings)
-recommendation = model.recommend(0, sparse_ratings.transpose(), filter_already_liked_items=False)
+recommendation = model.recommend(user_id, user_items)
 print([item[0] for item in recommendation])

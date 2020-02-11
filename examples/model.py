@@ -22,6 +22,13 @@ MODELS = {
     "bm25": BM25Recommender,
 }
 
+ALS_MODELS = {
+    "als":  AlternatingLeastSquares,
+    "faiss_als": FaissAlternatingLeastSquares,
+    # "nmslib_als": NMSLibAlternatingLeastSquares,
+    # "annoy_als": AnnoyAlternatingLeastSquares,
+}
+
 
 def get_model(model_name):
     print("getting model %s" % model_name)

@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 from helper import ItemsHelper, RatingsHelper
 from eval import evaluate, evaluate_avg
-from model import get_model, MODELS
+from model import get_model, ALS_MODELS
 
 # movielens_prefix = "ml-latest-small"
 movielens_prefix = "/media/john/data/data/ml-20m"
@@ -34,22 +34,26 @@ stat(ratings_train)
 stat(ratings_test)
 
 item_users = ratings_helper.to_sparse_item_users(ratings_train)
-# user_items = ratings_helper.to_sparse_user_items(ratings_train)
 user_items = item_users.T.tocsr()
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("implicit")
+# TODO: bm25_weights
+
+recommend_all_flag = True
 
 metrics = []
-for model_name in MODELS.keys():
+for model_name in ALS_MODELS.keys():
     log.info(model_name)
     model = get_model(model_name)
     start = time.time()
     model.fit(item_users)
     log.info("trained model '%s' in %s", model_name, time.time() - start)
 
-    s1 = evaluate_avg(model, user_items, ratings_test, K=10)
-    s2 = evaluate_avg(model, user_items, ratings_test, K=5)
+    start = time.time()
+    s1 = evaluate_avg(model, user_items, ratings_test, K=10, recommend_all=recommend_all_flag)
+    s2 = evaluate_avg(model, user_items, ratings_test, K=5, recommend_all=recommend_all_flag)
+    log.info("evaluated model '%s' in %s", model_name, time.time() - start)
     s1.update(s2)
     s1["model"] = model_name
     metrics.append(s1)
