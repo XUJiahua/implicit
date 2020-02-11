@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 from helper import ItemsHelper, RatingsHelper
 from eval import evaluate, evaluate_avg
 from model import get_model, ALS_MODELS
+from implicit.nearest_neighbours import bm25_weight
 
 # movielens_prefix = "ml-latest-small"
 movielens_prefix = "/media/john/data/data/ml-20m"
@@ -38,8 +39,8 @@ user_items = item_users.T.tocsr()
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("implicit")
-# TODO: bm25_weights
-
+# TRY: bm25_weights is good for f1 score?
+# item_users = (bm25_weight(item_users, B=0.9) * 5).tocsr()
 recommend_all_flag = True
 
 metrics = []
