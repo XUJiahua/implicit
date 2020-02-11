@@ -16,8 +16,15 @@ INFO:implicit:evaluated model 'faiss_als' in 102.83234524726868
 0,1.9308403998,14.8438599878,0.19308404,0.1891927969,0.2078962146,1.1882694507,14.8438599878,0.2376538901,0.1213974727,0.2094081898,als
 1,1.66707011,14.8438599878,0.166707011,0.176945121,0.1948293952,1.0663305464,14.8438599878,0.2132661093,0.1163444639,0.2045619961,faiss_als
 
+# recommend loop
+
+INFO:implicit:trained model 'als' in 17.253923654556274
+INFO:implicit:evaluated model 'als' in 63.69158601760864
+INFO:implicit:trained model 'faiss_als' in 16.350241899490356
+INFO:implicit:evaluated model 'faiss_als' in 59.09055972099304
 ```
 
+faiss(cpu) als has little advantage.
 big advantage??? no clue.
 
 

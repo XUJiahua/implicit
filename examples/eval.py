@@ -50,3 +50,15 @@ def evaluate(model, ratings_train, ratings_test, K=10, recommend_all=True, col_u
 def evaluate_avg(model, ratings_train, ratings_test, K=10, recommend_all=True, col_user='uid', col_item='iid'):
     df = evaluate(model, ratings_train, ratings_test, K, recommend_all, col_user, col_item)
     return json.loads(df.describe().loc["mean", :].to_json())
+
+
+def measure_recommend(model, ratings_train, ratings_test, K=10, col_user='uid', col_item='iid'):
+    # uid as index
+    interactions = ratings_test.groupby([col_user])[col_item].apply(list)
+
+    for index, _ in interactions.items():
+        model.recommend(
+            index,
+            ratings_train,
+            N=K
+        )
