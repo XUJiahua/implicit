@@ -31,7 +31,8 @@ stat(ratings_train)
 stat(ratings_test)
 
 item_users = ratings_helper.to_sparse_item_users(ratings_train)
-user_items = ratings_helper.to_sparse_user_items(ratings_train)
+# user_items = ratings_helper.to_sparse_user_items(ratings_train)
+user_items = item_users.T.tocsr()
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("implicit")
